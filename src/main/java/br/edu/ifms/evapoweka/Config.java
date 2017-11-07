@@ -1,4 +1,4 @@
-package evapotranspiracaoweka;
+package br.edu.ifms.evapoweka;
 
 /**
  *

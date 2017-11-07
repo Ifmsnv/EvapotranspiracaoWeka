@@ -1,6 +1,6 @@
-package evapotranspiracaoweka;
+package br.edu.ifms.evapoweka;
 
-import evapotranspiracaoweka.instances.FullInstances;
+import br.edu.ifms.evapoweka.instances.FullInstances;
 import java.text.DecimalFormat;
 import weka.classifiers.evaluation.Evaluation;
 import weka.classifiers.functions.MultilayerPerceptron;

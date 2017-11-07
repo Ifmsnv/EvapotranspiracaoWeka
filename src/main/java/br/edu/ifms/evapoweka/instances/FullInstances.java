@@ -1,6 +1,6 @@
-package evapotranspiracaoweka.instances;
+package br.edu.ifms.evapoweka.instances;
 
-import evapotranspiracaoweka.Config;
+import br.edu.ifms.evapoweka.Config;
 import weka.core.Instances;
 import weka.core.converters.ConverterUtils;
 
