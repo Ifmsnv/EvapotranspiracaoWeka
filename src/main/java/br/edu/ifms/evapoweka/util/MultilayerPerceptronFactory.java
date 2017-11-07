@@ -1,4 +1,4 @@
-package br.edu.ifms.evapoweka;
+package br.edu.ifms.evapoweka.util;
 
 import weka.classifiers.functions.MultilayerPerceptron;
 

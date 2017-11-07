@@ -1,7 +1,7 @@
-package br.edu.ifms.evapoweka.simulation;
+package br.edu.ifms.evapoweka;
 
-import br.edu.ifms.evapoweka.Config;
-import br.edu.ifms.evapoweka.MLPRun;
+import br.edu.ifms.evapoweka.util.Config;
+import br.edu.ifms.evapoweka.util.MLPRun;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
@@ -14,6 +14,9 @@ import java.util.List;
 import weka.classifiers.evaluation.Evaluation;
 
 /**
+ * Esta classe simula qual a melhor disposicao de camadas ocultas
+ * para o algoritmo encontrar o melhor resultado.
+ * 
  * weka.classifiers.functions.MultilayerPerceptron
  * -L 0.3 -M 0.2 -N 250 -V 0 -S 1 -E 1 -H "3, 4, 5" -R
  *
@@ -46,7 +49,7 @@ public class HiddenLayersVariation {
         
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMddHHmm");
         List<String> lines = new ArrayList<>();
-        Path file = Paths.get(Config.PATH + "/hiddenLayers-"
+        Path file = Paths.get(Config.PATH_DATA + "/hiddenLayers-"
                 + dateFormat.format(new Date())
                 + ".csv");
         
