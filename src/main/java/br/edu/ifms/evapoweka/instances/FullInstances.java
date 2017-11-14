@@ -12,9 +12,9 @@ public class FullInstances {
 
     public static Instances factory() throws Exception {
         ConverterUtils.DataSource source;
-
+        
         source = new ConverterUtils.DataSource(Config.PATH_DATA
-                + "/dados-climaticos/dados-climaticos-trainer.arff");
+                + "/dados-climaticos-original/dados-climaticos-trainer.arff");
         
         Instances data = source.getDataSet();
         

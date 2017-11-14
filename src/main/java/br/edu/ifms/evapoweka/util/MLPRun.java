@@ -12,7 +12,7 @@ import weka.core.Instances;
  */
 public class MLPRun {
 
-    private static final DecimalFormat DF = new DecimalFormat("0.0000");
+    // private static final DecimalFormat DF = new DecimalFormat("0.0000");
 
     public MultilayerPerceptron mlp;
 
@@ -24,13 +24,12 @@ public class MLPRun {
         mlp = MultilayerPerceptronFactory.factory(options);
     }
 
-    public Evaluation run() {
+    public Evaluation run(Instances train, Instances test) {
         try {
-            Instances data = FullInstances.factory();
-            mlp.buildClassifier(data);
+            mlp.buildClassifier(train);
 
-            Evaluation eval = new Evaluation(data);
-            eval.evaluateModel(mlp, data);
+            Evaluation eval = new Evaluation(train);
+            eval.evaluateModel(mlp, test);
             
             return eval;
 
