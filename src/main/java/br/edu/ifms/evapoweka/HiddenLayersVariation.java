@@ -87,7 +87,7 @@ public class HiddenLayersVariation {
                         
                         mlp = new MLPRun();
                         mlp.mlp.setHiddenLayers(l1 + "," + l2 + "," + l3);
-                        Evaluation eval = mlp.run(data, data);
+                        Evaluation eval = mlp.evaluate(data, data);
                         
                         tmp = String.valueOf(eval.correlationCoefficient() * 100);
                         System.out.println(tmp);

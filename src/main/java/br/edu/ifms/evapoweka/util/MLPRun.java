@@ -24,7 +24,7 @@ public class MLPRun {
         mlp = MultilayerPerceptronFactory.factory(options);
     }
 
-    public Evaluation run(Instances train, Instances test) {
+    public Evaluation evaluate(Instances train, Instances test) {
         try {
             mlp.buildClassifier(train);
 

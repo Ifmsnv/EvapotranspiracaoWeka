@@ -14,14 +14,13 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVPrinter;
 import org.apache.commons.csv.CSVRecord;
 
 /**
  * Esta classe faz a separacao dos dados por estacoes do ano.
+ * Os arquivos precisam ter os cabecalhos: Data, TMAX, TMIN, TMED, ETP-Pmoith
  *
  * @author Alisson G. Chiquitto <chiquitto@gmail.com>
  * @link https://www.programcreek.com/java-api-examples/index.php?api=org.apache.commons.csv.CSVPrinter
@@ -40,7 +39,7 @@ public class CsvSeparatorSeasons {
     public static void main(String[] args) {
 
         CsvSeparatorSeasons x = new CsvSeparatorSeasons(
-                Config.PATH_DATA + "/dados-climaticos-regiao1/dados-climaticos.csv"
+                Config.PATH_DATA + "/dados-climaticos-regiao2/dados-climaticos.csv"
         );
 
     }
@@ -151,7 +150,7 @@ public class CsvSeparatorSeasons {
         headers.add("Data");
         headers.add("TMAX");
         headers.add("TMIN");
-        headers.add("TMED");
+        // headers.add("TMED");
         headers.add("ETP-Pmoith");
         
         csvPrinter.printRecord(headers);
@@ -202,10 +201,10 @@ public class CsvSeparatorSeasons {
 
         for (CSVRecord record : records) {
             String dataString = record.get("Data");
-            String tmax = record.get("TMAX");
-            String tmin = record.get("TMIN");
-            String tmed = record.get("TMED");
-            String etpPmoith = record.get("ETP-Pmoith");
+            // String tmax = record.get("TMAX");
+            // String tmin = record.get("TMIN");
+            // String tmed = record.get("TMED");
+            // String etpPmoith = record.get("ETP-Pmoith");
 
             Date data = this.dateFormat.parse(dataString);
             int estacao = getEstacao(data);

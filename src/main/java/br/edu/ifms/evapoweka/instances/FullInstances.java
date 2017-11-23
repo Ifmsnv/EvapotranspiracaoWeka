@@ -14,7 +14,7 @@ public class FullInstances {
         ConverterUtils.DataSource source;
         
         source = new ConverterUtils.DataSource(Config.PATH_DATA
-                + "/dados-climaticos-original/dados-climaticos-trainer.arff");
+                + "/dados-climaticos-regiao2/dados-climaticos-inverno.csv.arff");
         
         Instances data = source.getDataSet();
         
