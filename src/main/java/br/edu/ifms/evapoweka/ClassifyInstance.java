@@ -3,7 +3,6 @@ package br.edu.ifms.evapoweka;
 import br.edu.ifms.evapoweka.instances.FullInstances;
 import br.edu.ifms.evapoweka.util.MLPRun;
 import java.util.ArrayList;
-import java.util.Enumeration;
 import weka.core.Attribute;
 import weka.core.DenseInstance;
 import weka.core.Instance;
@@ -12,9 +11,12 @@ import weka.core.Instances;
 /**
  * https://stackoverflow.com/questions/13029118/classifying-single-instance-in-weka
  * 
+ * Exemplo de classificação de uma intancia.
+ * O script treina o algoritmo de acordo com as configurações, e então classifica uma instância.
+ * 
  * @author Alisson G. Chiquitto <chiquitto@gmail.com>
  */
-public class Test {
+public class ClassifyInstance {
 
     public static void main(String[] args) {
 
@@ -64,12 +66,12 @@ public class Test {
         
         System.out.println(mlp.mlp.classifyInstance(inst_co));
 
-        int x = 100;
-        double i = mlp.mlp.classifyInstance(train.get(x));
+        //int x = 100;
+        //double i = mlp.mlp.classifyInstance(train.get(x));
 
-        System.out.println(train.get(x));
-        System.out.println(i);
-        System.out.println("2.0377695563738625");
+        //System.out.println(train.get(x));
+        //System.out.println(i);
+        //System.out.println("2.0377695563738625");
 
         //Evaluation eval = mlp.evaluate(data, data);
         //mlp.printConfig();
