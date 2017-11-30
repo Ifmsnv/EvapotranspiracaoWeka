@@ -34,7 +34,7 @@ public class HiddenLayersVariation {
 
     public static void main(String[] args) {
         
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMddHHmm");
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd-HHmm");
         
         arquivoSaida = Config.PATH_DATA + "/hiddenLayers-"
                 + dateFormat.format(new Date())

@@ -1,6 +1,5 @@
 package br.edu.ifms.evapoweka;
 
-import br.edu.ifms.evapoweka.util.Config;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -27,9 +26,14 @@ import org.apache.commons.csv.CSVRecord;
  */
 public class CsvSeparatorSeasons {
 
-    private String filePath;
+    private File file;
     private Reader fileReader;
     private SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+    
+    private File csvFileInverno;
+    private File csvFileOutono;
+    private File csvFilePrimavera;
+    private File csvFileVerao;
 
     private CSVPrinter csvPrinterVerao;
     private CSVPrinter csvPrinterOutono;
@@ -38,19 +42,19 @@ public class CsvSeparatorSeasons {
 
     public static void main(String[] args) {
 
-        CsvSeparatorSeasons x = new CsvSeparatorSeasons(
-                Config.PATH_DATA + "/dados-climaticos-regiao2/dados-climaticos.csv"
-        );
+        // CsvSeparatorSeasons x = new CsvSeparatorSeasons(
+        //         Config.PATH_DATA + "/dados-climaticos-regiao2/dados-climaticos.csv"
+        // );
 
     }
 
-    public CsvSeparatorSeasons(String filePath) {
+    public CsvSeparatorSeasons(File file) {
 
-        this.filePath = filePath;
+        this.file = file;
 
         try {
 
-            this.fileReader = new FileReader(this.filePath);
+            this.fileReader = new FileReader(this.file);
 
             initCsvPrinterVerao();
             initCsvPrinterOutono();
@@ -85,7 +89,7 @@ public class CsvSeparatorSeasons {
      *
      * @return int Numero indicando a estacao
      */
-    private int getEstacao(Date data) {
+    private int calculateEstacao(Date data) {
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(data);
 
@@ -132,26 +136,47 @@ public class CsvSeparatorSeasons {
         return 0;
     }
 
-    private CSVPrinter initCsvPrinter(String estacao)
+    public File getCsvFileInverno() {
+        return csvFileInverno;
+    }
+
+    public File getCsvFileOutono() {
+        return csvFileOutono;
+    }
+
+    public File getCsvFilePrimavera() {
+        return csvFilePrimavera;
+    }
+
+    public File getCsvFileVerao() {
+        return csvFileVerao;
+    }
+    
+    private File initCsvFile(String estacao) {
+        String newFileAbsolutePath = this.file
+                .getAbsolutePath()
+                .replace(".csv", "-" + estacao + ".csv")
+                ;
+
+        return new File(newFileAbsolutePath);
+    }
+
+    private CSVPrinter initCsvPrinter(File file)
             throws IOException {
 
-        String fileName = this.filePath.replace(".csv", "-" + estacao + ".csv");
-
-        File file = new File(fileName);
         if (file.exists()) {
             file.delete();
         }
 
-        BufferedWriter writer = new BufferedWriter(new FileWriter(fileName));
+        BufferedWriter writer = new BufferedWriter(new FileWriter(file.getAbsoluteFile()));
         CSVPrinter csvPrinter = new CSVPrinter(writer, CSVFormat.RFC4180);
 
         List<String> headers = new ArrayList<String>();
 
-        headers.add("Data");
+        headers.add("DATA");
         headers.add("TMAX");
         headers.add("TMIN");
-        // headers.add("TMED");
-        headers.add("ETP-Pmoith");
+        headers.add("ETP");
         
         csvPrinter.printRecord(headers);
 
@@ -160,26 +185,30 @@ public class CsvSeparatorSeasons {
     }
 
     private void initCsvPrinterInverno() throws IOException {
-
-        this.csvPrinterInverno = this.initCsvPrinter("inverno");
+        
+        this.csvFileInverno = this.initCsvFile("inverno");
+        this.csvPrinterInverno = this.initCsvPrinter(this.csvFileInverno);
 
     }
 
     private void initCsvPrinterOutono() throws IOException {
 
-        this.csvPrinterOutono = this.initCsvPrinter("outono");
+        this.csvFileOutono = this.initCsvFile("outono");
+        this.csvPrinterOutono = this.initCsvPrinter(this.csvFileOutono);
 
     }
 
     private void initCsvPrinterPrimavera() throws IOException {
 
-        this.csvPrinterPrimavera = this.initCsvPrinter("primavera");
+        this.csvFilePrimavera = this.initCsvFile("primavera");
+        this.csvPrinterPrimavera = this.initCsvPrinter(this.csvFilePrimavera);
 
     }
 
     private void initCsvPrinterVerao() throws IOException {
 
-        this.csvPrinterVerao = this.initCsvPrinter("verao");
+        this.csvFileVerao = this.initCsvFile("verao");
+        this.csvPrinterVerao = this.initCsvPrinter(this.csvFileVerao);
 
     }
 
@@ -200,27 +229,27 @@ public class CsvSeparatorSeasons {
         Iterable<CSVRecord> records = obtainCsvIterable();
 
         for (CSVRecord record : records) {
-            String dataString = record.get("Data");
-            // String tmax = record.get("TMAX");
-            // String tmin = record.get("TMIN");
-            // String tmed = record.get("TMED");
-            // String etpPmoith = record.get("ETP-Pmoith");
+            String dataString = record.get("DATA");
 
             Date data = this.dateFormat.parse(dataString);
-            int estacao = getEstacao(data);
+            int estacao = calculateEstacao(data);
 
             switch (estacao) {
                 case 1:
                     csvPrinterVerao.printRecord(record);
+                    csvPrinterVerao.flush();
                     break;
                 case 2:
                     csvPrinterOutono.printRecord(record);
+                    csvPrinterOutono.flush();
                     break;
                 case 3:
                     csvPrinterInverno.printRecord(record);
+                    csvPrinterInverno.flush();
                     break;
                 case 4:
                     csvPrinterPrimavera.printRecord(record);
+                    csvPrinterPrimavera.flush();
                     break;
             }
         }
