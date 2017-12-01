@@ -16,22 +16,40 @@ import weka.core.converters.CSVLoader;
  */
 public class Csv2Arff {
 
-    public static void main(String[] args) {
-        String path = "/home/alisson/work/evapoweka/data/dados-climaticos-regiao2/dados-climaticos-verao.csv";
+    private File newFile;
 
-        File f = new File(path);
+    public static void main(String[] args) {
+
+        // new Csv2Arff("");
+    }
+
+    public Csv2Arff(File file) {
+
+        run(file);
+
+    }
+
+    public File getNewFile() {
+        return newFile;
+    }
+
+    private void run(File file) {
 
         CSVLoader loader = new CSVLoader();
         try {
-            loader.setSource(f);
-            loader.setDateFormat("dd/MM/yyyy");
-            loader.setDateAttributes("1");
+            loader.setSource(file);
+            // loader.setDateFormat("dd/MM/yyyy");
+            // loader.setDateAttributes("1");
+            loader.setNumericAttributes("first-last");
 
             Instances structure = loader.getStructure();
 
-            File file = new File(path + ".arff");
-            file.createNewFile();
-            FileWriter writer = new FileWriter(file);
+            this.newFile = new File(file.getAbsoluteFile() + ".arff");
+            if (this.newFile.exists()) {
+                this.newFile.delete();
+            }
+            this.newFile.createNewFile();
+            FileWriter writer = new FileWriter(this.newFile);
 
             writer.write(structure.toString() + "\n");
 

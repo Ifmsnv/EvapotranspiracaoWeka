@@ -27,12 +27,17 @@ public class Processo1 {
             a.getCsvFilePrimavera(),
             a.getCsvFileVerao()
         };
+        
         for (File file : files) {
-            CsvRemoveDataAttr b1 = new CsvRemoveDataAttr(file);
+            CsvRemoveDataAttr b = new CsvRemoveDataAttr(file);
+        
+            // Gerar arquivos ARFF (Csv2Arff)
+            Csv2Arff c = new Csv2Arff(b.getNewFile());
+        
+            // Calcular a melhor distribuição de neorônios (HiddenLayersVariation)
+            HiddenLayersVariation d = new HiddenLayersVariation(c.getNewFile());
         }
         
-        // Gerar arquivos ARFF (Csv2Arff)
-        // Calcular a melhor distribuição de neorônios (HiddenLayersVariation)
     }
     
     public static void main(String[] args) {

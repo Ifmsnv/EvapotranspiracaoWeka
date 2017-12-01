@@ -3,6 +3,7 @@ package br.edu.ifms.evapoweka;
 import br.edu.ifms.evapoweka.instances.FullInstances;
 import br.edu.ifms.evapoweka.util.Config;
 import br.edu.ifms.evapoweka.util.MLPRun;
+import java.io.File;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
@@ -31,21 +32,33 @@ import weka.core.Instances;
 public class HiddenLayersVariation {
     
     private static String arquivoSaida;
+    private File arffFile;
 
     public static void main(String[] args) {
         
+        // new HiddenLayersVariation();
+
+    }
+
+    public HiddenLayersVariation(File arffFile) {
+        
+        this.arffFile = arffFile;
+        
+        run();
+        
+    }
+    
+    private void run() {
+        
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd-HHmm");
         
-        arquivoSaida = Config.PATH_DATA + "/hiddenLayers-"
-                + dateFormat.format(new Date())
-                + ".csv";
+        this.arquivoSaida = this.arffFile + "-layers.csv";
         
-        // MLPTest t = new MLPTest();
         test3HiddenLayersVariation();
 
     }
     
-    public static void test3HiddenLayersVariation() {
+    public void test3HiddenLayersVariation() {
         
         // String[] options = {"-L", "0.3", "-M", "0.2", "-N", "250", "-V", "0",
         //    "-S", "1", "-E", "1", "-H", "", "-R"};
@@ -58,7 +71,7 @@ public class HiddenLayersVariation {
         // }
         
         List<String> lines = new ArrayList<>();
-        Path file = Paths.get(arquivoSaida);
+        Path file = Paths.get(this.arquivoSaida);
         
         int l1, l2, l3;
         int max = 10;
@@ -67,7 +80,7 @@ public class HiddenLayersVariation {
         
         Instances data;
         try {
-            data = FullInstances.factory();
+            data = FullInstances.factory(this.arffFile);
         } catch (Exception ex) {
             ex.printStackTrace();
             
