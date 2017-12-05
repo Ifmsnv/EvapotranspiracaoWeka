@@ -52,7 +52,7 @@ public class HiddenLayersVariation {
         
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd-HHmm");
         
-        this.arquivoSaida = this.arffFile + "-layers.csv";
+        this.arquivoSaida = this.arffFile + "-3layers.csv";
         
         test3HiddenLayersVariation();
 
@@ -87,9 +87,9 @@ public class HiddenLayersVariation {
             return;
         }
         
-        for (l1 = 2; l1 <= max; l1++) {
-            for (l2 = 2; l2 <= max; l2++) {
-                for (l3 = 2; l3 <= max; l3++) {
+        for (l1 = 5; l1 <= max; l1++) {
+            for (l2 = 5; l2 <= max; l2++) {
+                for (l3 = 5; l3 <= max; l3++) {
                     
                     try {
                         

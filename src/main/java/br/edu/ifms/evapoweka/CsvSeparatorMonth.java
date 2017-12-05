@@ -61,7 +61,7 @@ public class CsvSeparatorMonth {
             try {
                 this.fileReader.close();
 
-                for (int month = 1; month <= 12; month++) {
+                for (int month = 0; month < 12; month++) {
                     this.csvPrinter[month].close();
                 }
             } catch (IOException ex) {
@@ -82,18 +82,25 @@ public class CsvSeparatorMonth {
         return calendar.get(Calendar.MONTH) + 1;
     }
 
+    public File[] getCsvFile() {
+        return csvFile;
+    }
+
     private File initCsvFile(int month) {
         String newFileAbsolutePath = this.file
                 .getAbsolutePath()
-                .replace(".csv", "-" + month + ".csv");
+                .replace(".csv", "-" + (month + 1) + ".csv");
 
         return new File(newFileAbsolutePath);
     }
 
     private void initCsvPrinter()
             throws IOException {
+        
+        this.csvFile = new File[12];
+        this.csvPrinter = new CSVPrinter[12];
 
-        for (int month = 1; month <= 12; month++) {
+        for (int month = 0; month < 12; month++) {
             this.csvFile[month] = this.initCsvFile(month);
 
             if (this.csvFile[month].exists()) {
@@ -138,7 +145,7 @@ public class CsvSeparatorMonth {
             String dataString = record.get("DATA");
 
             Date data = this.dateFormat.parse(dataString);
-            int month = calculateMonth(data);
+            int month = calculateMonth(data) - 1;
             
             this.csvPrinter[month].printRecord(record);
             this.csvPrinter[month].flush();
