@@ -71,7 +71,8 @@ public class HiddenLayersVariation {
         // List<String> lines = new ArrayList<>();
         //Path file = Paths.get(this.output.getAbsolutePath());
         int l1, l2, l3;
-        int max = 10;
+        int min = 5;
+        int max = 20;
         MLPRun mlp;
 
         List<Instances> instancesList = new ArrayList<>();
@@ -97,9 +98,9 @@ public class HiddenLayersVariation {
             return;
         }
 
-        for (l1 = 5; l1 <= max; l1++) {
-            for (l2 = 5; l2 <= max; l2++) {
-                for (l3 = 5; l3 <= max; l3++) {
+        for (l1 = min; l1 <= max; l1++) {
+            for (l2 = min; l2 <= max; l2++) {
+                for (l3 = min; l3 <= max; l3++) {
 
                     line = new ArrayList<>();
                     line.add(Integer.toString(l1));
