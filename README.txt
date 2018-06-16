@@ -1,4 +1,5 @@
 ClassifyInstance - Exemplo de treinamento de um algoritmo e classificar uma instancia.
+CreateDatabase - Criar o banco de dados
 Csv2Arff - Converte arquivo CSV para ARFF.
 CsvSeparatorSeasons - Separa arquivos CSV em estações do ano.
 GenerateModel - Faz o treinameto do algoritmo e salva o Modelo.
@@ -11,3 +12,18 @@ Processo 1
 . Separar o arquivo em estações (CsvSeparatorSeasons)
 . Gerar arquivos ARFF (Csv2Arff)
 . Calcular a melhor distribuição de neorônios (HiddenLayersVariation)
+
+Processo 2
+. O Lucas me envia os arquivos no formato Excel
+. Converter o arquivo para CSV - O separador decimal deve ser . (ponto)
+. Separar o arquivo em meses (CsvSeparatorMonth)
+. Gerar arquivos ARFF (Csv2Arff)
+. Calcular a melhor distribuição de neorônios (HiddenLayersVariation)
+
+Processo 3
+. Lucas me envia os arquivos no formato Excel
+. Converter as planilhas do arquivo em CSV
+. Executar o Processo3.java (agrupador dos seguintes subtarefas)
+    . Separar o arquivo em estações (CsvSeparatorSeasons)
+    . Gerar arquivos ARFF (Csv2Arff)
+    . Calcular a melhor distribuição de neorônios (HiddenLayersVariation)
