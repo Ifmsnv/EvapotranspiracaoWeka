@@ -1,55 +1,86 @@
 package br.edu.ifms.evapoweka;
 
+import br.edu.ifms.evapoweka.util.CsvSeparatorSeasonsByMonth;
 import br.edu.ifms.evapoweka.util.Config;
 import br.edu.ifms.evapoweka.util.SQLiteJDBC;
 import java.io.File;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import org.apache.commons.io.FilenameUtils;
 
 public class Processo3 {
 
-    private final String PATH;
-    private final String CSV;
+    // private String PATH;
+    // private String CSV;
 
-    private final File csvFile;
+    // private File csvFile;
 
     public Processo3() {
-        
-        SQLiteJDBC.getInstance();
-        
-        System.exit(0);
+        // this.PATH = Config.PATH_DATA;
 
-        this.PATH = Config.PATH_DATA + "/dados-climaticos-roncador";
-        this.CSV = this.PATH + "/RONCADOR-DF-ENVIADO-CHIQUITTO.csv";
+        Connection con = SQLiteJDBC.getConnection();
 
-        this.csvFile = new File(this.CSV);
+        String selectSQL = "SELECT idFile, name FROM file";
+
+        try {
+            PreparedStatement preparedStatement = con.prepareStatement(selectSQL);
+            ResultSet rs = preparedStatement.executeQuery();
+
+            while (rs.next()) {
+                int idFile = rs.getInt("idFile");
+                String name = rs.getString("name");
+                String fileName = name + ".csv";
+                
+                String filePath = String.format("%s/%s", Config.PATH_DATA, fileName);
+                System.out.println(filePath);
+                subProcesso3(new File(filePath));
+            }
+            
+            rs.close();
+            preparedStatement.close();
+            
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+
+    }
+
+    public void subProcesso3(File csvFile) {
 
         // Separar o arquivo em estações (CsvSeparatorSeasons)
-        CsvSeparatorSeasons a = new CsvSeparatorSeasons(this.csvFile);
+        CsvSeparatorSeasonsByMonth a = new CsvSeparatorSeasonsByMonth(csvFile);
 
         // Remover serie DATA para os arquivos gerados
-        File[] csvFiles = {
+        File[] csvStationFiles = {
             a.getCsvFileVerao(),
             a.getCsvFileOutono(),
             a.getCsvFileInverno(),
             a.getCsvFilePrimavera()
         };
 
-        File[] arffFiles = new File[csvFiles.length];
+        File[] arffFiles = new File[csvStationFiles.length];
 
         int i = 0;
-        for (File csvFile : csvFiles) {
-            CsvRemoveDataAttr b = new CsvRemoveDataAttr(csvFile);
+        for (File csvStationFile : csvStationFiles) {
+            CsvRemoveDataAttr b = new CsvRemoveDataAttr(csvStationFile);
 
             // Gerar arquivos ARFF (Csv2Arff)
             Csv2Arff c = new Csv2Arff(b.getNewFile());
             arffFiles[i] = c.getNewFile();
-            
+
             i++;
         }
+        
+        return ;
 
         // Calcular a melhor distribuição de neorônios (HiddenLayersVariation)
-        File output = new File(this.csvFile + "-3layers.csv");
+        File output = new File(csvFile + "-3layers.csv");
         HiddenLayersVariation d = new HiddenLayersVariation(output, arffFiles);
 
     }

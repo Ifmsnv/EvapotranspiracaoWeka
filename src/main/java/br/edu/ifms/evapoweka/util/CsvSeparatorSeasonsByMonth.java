@@ -1,4 +1,4 @@
-package br.edu.ifms.evapoweka;
+package br.edu.ifms.evapoweka.util;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -16,6 +16,7 @@ import java.util.List;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVPrinter;
 import org.apache.commons.csv.CSVRecord;
+import org.apache.commons.io.FilenameUtils;
 
 /**
  * Esta classe faz a separacao dos dados por estacoes do ano.
@@ -24,7 +25,7 @@ import org.apache.commons.csv.CSVRecord;
  * @author Alisson G. Chiquitto <chiquitto@gmail.com>
  * @link https://www.programcreek.com/java-api-examples/index.php?api=org.apache.commons.csv.CSVPrinter
  */
-public class CsvSeparatorSeasons {
+public class CsvSeparatorSeasonsByMonth {
 
     private File file;
     private Reader fileReader;
@@ -40,15 +41,7 @@ public class CsvSeparatorSeasons {
     private CSVPrinter csvPrinterInverno;
     private CSVPrinter csvPrinterPrimavera;
 
-    public static void main(String[] args) {
-
-        // CsvSeparatorSeasons x = new CsvSeparatorSeasons(
-        //         Config.PATH_DATA + "/dados-climaticos-regiao2/dados-climaticos.csv"
-        // );
-
-    }
-
-    public CsvSeparatorSeasons(File file) {
+    public CsvSeparatorSeasonsByMonth(File file) {
 
         this.file = file;
 
@@ -153,9 +146,12 @@ public class CsvSeparatorSeasons {
     }
     
     private File initCsvFile(String estacao) {
+        String dir = FilenameUtils.removeExtension(this.file.getAbsolutePath());
+        new File(dir).mkdir();
+        
         String newFileAbsolutePath = this.file
                 .getAbsolutePath()
-                .replace(".csv", "-" + estacao + ".csv")
+                .replace(".csv", "/" + estacao + ".csv")
                 ;
 
         return new File(newFileAbsolutePath);
@@ -173,7 +169,8 @@ public class CsvSeparatorSeasons {
 
         List<String> headers = new ArrayList<String>();
 
-        headers.add("DATA");
+        headers.add("MES");
+        headers.add("ANO");
         headers.add("TMAX");
         headers.add("TMIN");
         headers.add("ETP");
@@ -229,7 +226,10 @@ public class CsvSeparatorSeasons {
         Iterable<CSVRecord> records = obtainCsvIterable();
 
         for (CSVRecord record : records) {
-            String dataString = record.get("DATA");
+            // Mês,Ano,Tmáx,Tmin,ETP
+            String mes = record.get("MES");
+            String ano = record.get("ANO");
+            String dataString = String.format("01/%s/%s", mes, ano);
 
             Date data = this.dateFormat.parse(dataString);
             int estacao = calculateEstacao(data);

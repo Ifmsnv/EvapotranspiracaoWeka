@@ -86,7 +86,7 @@ public class CreateDatabase {
             System.out.println("File " + listOfFiles[i].getName());
 
             preparedStatement = con.prepareStatement(selectSQL);
-            preparedStatement.setString(1, listOfFiles[i].getName());
+            preparedStatement.setString(1, FilenameUtils.removeExtension(listOfFiles[i].getName()));
             preparedStatement.executeUpdate();
 
         }
