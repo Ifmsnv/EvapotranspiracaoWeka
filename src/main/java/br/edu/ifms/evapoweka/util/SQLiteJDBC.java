@@ -8,7 +8,7 @@ package br.edu.ifms.evapoweka.util;
 import java.sql.Connection;
 import java.sql.DriverManager;
 
-/**
+/*
  *
  * @author alisson
  * @link https://www.tutorialspoint.com/sqlite/sqlite_java.htm

@@ -8,11 +8,6 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import org.apache.commons.io.FilenameUtils;
 
 public class Processo3 {
 
@@ -39,7 +34,7 @@ public class Processo3 {
                 
                 String filePath = String.format("%s/%s", Config.PATH_DATA, fileName);
                 System.out.println(filePath);
-                subProcesso3(new File(filePath));
+                subProcesso3(idFile, new File(filePath));
             }
             
             rs.close();
@@ -51,7 +46,7 @@ public class Processo3 {
 
     }
 
-    public void subProcesso3(File csvFile) {
+    public void subProcesso3(int idFile, File csvFile) {
 
         // Separar o arquivo em estações (CsvSeparatorSeasons)
         CsvSeparatorSeasonsByMonth a = new CsvSeparatorSeasonsByMonth(csvFile);
@@ -76,12 +71,9 @@ public class Processo3 {
 
             i++;
         }
-        
-        return ;
 
         // Calcular a melhor distribuição de neorônios (HiddenLayersVariation)
-        File output = new File(csvFile + "-3layers.csv");
-        HiddenLayersVariation d = new HiddenLayersVariation(output, arffFiles);
+        HiddenLayersVariation d = new HiddenLayersVariation(idFile, arffFiles);
 
     }
 

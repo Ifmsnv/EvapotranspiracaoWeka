@@ -34,7 +34,8 @@ public class CreateDatabase {
         try {
             this.createFilesTable();
             this.createFilesStationTable();
-            
+            this.createOutputTable();
+
             this.populateFilesTable();
         } catch (SQLException ex) {
             ex.printStackTrace();
@@ -109,6 +110,34 @@ public class CreateDatabase {
                 + "    idFile INTEGER REFERENCES file (idFile) NOT NULL,\n"
                 + "    name STRING  NOT NULL\n"
                 + ");";
+        stmt = con.createStatement();
+        stmt.executeUpdate(sql);
+
+        con.commit();
+    }
+
+    private void createOutputTable() throws SQLException {
+        Connection con = SQLiteJDBC.getConnection();
+
+        String sql;
+        Statement stmt;
+
+        sql = "DROP TABLE IF EXISTS outputData";
+        stmt = con.createStatement();
+        stmt.executeUpdate(sql);
+        
+        sql = "CREATE TABLE outputData (\n"
+                + "    idFile    INTEGER REFERENCES file (idFile),\n"
+                + "    l1        INTEGER,\n"
+                + "    l2        INTEGER,\n"
+                + "    l3        INTEGER,\n"
+                + "    verao     DOUBLE NOT NULL,\n"
+                + "    outono    DOUBLE NOT NULL,\n"
+                + "    inverno   DOUBLE NOT NULL,\n"
+                + "    primavera DOUBLE NOT NULL,\n"
+                + "    PRIMARY KEY (idFile, l1, l2, l3)\n"
+                + ")";
+        System.out.println(sql);
         stmt = con.createStatement();
         stmt.executeUpdate(sql);
 

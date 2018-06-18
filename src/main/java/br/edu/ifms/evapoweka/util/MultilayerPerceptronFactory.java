@@ -2,7 +2,7 @@ package br.edu.ifms.evapoweka.util;
 
 import weka.classifiers.functions.MultilayerPerceptron;
 
-/**
+/*
  *
  * @author Alisson G. Chiquitto <chiquitto@gmail.com>
  */

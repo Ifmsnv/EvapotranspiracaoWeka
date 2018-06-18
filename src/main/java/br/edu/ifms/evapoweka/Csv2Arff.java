@@ -7,7 +7,7 @@ import weka.core.Instance;
 import weka.core.Instances;
 import weka.core.converters.CSVLoader;
 
-/**
+/*
  * @link https://svn.cms.waikato.ac.nz/svn/weka/trunk/weka/src/main/java/weka/core/converters/
  * @link https://svn.cms.waikato.ac.nz/svn/weka/trunk/weka/src/main/java/weka/core/converters/AbstractFileLoader.java
  * @link https://svn.cms.waikato.ac.nz/svn/weka/trunk/weka/src/main/java/weka/core/converters/CSVLoader.java

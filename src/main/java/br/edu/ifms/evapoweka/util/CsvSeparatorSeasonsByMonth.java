@@ -18,7 +18,7 @@ import org.apache.commons.csv.CSVPrinter;
 import org.apache.commons.csv.CSVRecord;
 import org.apache.commons.io.FilenameUtils;
 
-/**
+/*
  * Esta classe faz a separacao dos dados por estacoes do ano.
  * Os arquivos precisam ter os cabecalhos: Data, TMAX, TMIN, TMED, ETP-Pmoith
  *
@@ -75,7 +75,7 @@ public class CsvSeparatorSeasonsByMonth {
 
     }
 
-    /**
+    /*
      * Testa a data e retorna 1 (Verao) SE 21 de dezembro a 20 de março / 2
      * (Outono) SE 20 de março a 21 de junho / 3 (Inverno) - 21 de junho a 22 de
      * setembro / 4 (Primavera) SE 22 de setembro a 21 de dezembro

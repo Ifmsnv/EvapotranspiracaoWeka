@@ -1,6 +1,6 @@
 package br.edu.ifms.evapoweka.util;
 
-/**
+/*
  *
  * @author Alisson G. Chiquitto <chiquitto@gmail.com>
  */
