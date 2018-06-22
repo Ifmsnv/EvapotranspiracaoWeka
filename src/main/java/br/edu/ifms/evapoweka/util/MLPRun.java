@@ -6,7 +6,7 @@ import weka.classifiers.evaluation.Evaluation;
 import weka.classifiers.functions.MultilayerPerceptron;
 import weka.core.Instances;
 
-/**
+/*
  *
  * @author Alisson G. Chiquitto <chiquitto@gmail.com>
  */
@@ -52,6 +52,7 @@ public class MLPRun {
         System.out.println("Learning Rate: " + mlp.getLearningRate());
         System.out.println("Momentum Rate: " + mlp.getMomentum());
         System.out.println("Hidden Layers: " + mlp.getHiddenLayers());
+        System.out.println("Training Time: " + mlp.getTrainingTime());
         System.out.println("*********************\n");
         
     }

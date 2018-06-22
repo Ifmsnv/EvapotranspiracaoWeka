@@ -17,7 +17,7 @@ import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVPrinter;
 import org.apache.commons.csv.CSVRecord;
 
-/**
+/*
  * Esta classe faz a separacao dos dados por meses do ano. Os arquivos precisam
  * ter os cabecalhos: Data, TMAX, TMIN, TMED, ETP-Pmoith
  *
@@ -71,7 +71,7 @@ public class CsvSeparatorMonth {
 
     }
 
-    /**
+    /*
      * 
      * @return int Numero indicando a estacao
      */

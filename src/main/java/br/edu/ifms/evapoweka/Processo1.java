@@ -20,7 +20,7 @@ public class Processo1 {
         this.csvFile = new File(this.CSV);
 
         // Separar o arquivo em estações (CsvSeparatorSeasons)
-        CsvSeparatorSeasons a = new CsvSeparatorSeasons(this.csvFile);
+        CsvSeparatorSeasonsByDay a = new CsvSeparatorSeasonsByDay(this.csvFile);
 
         // Remover serie DATA para os arquivos gerados
         File[] csvFiles = {

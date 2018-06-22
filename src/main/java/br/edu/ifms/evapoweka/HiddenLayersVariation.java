@@ -3,6 +3,7 @@ package br.edu.ifms.evapoweka;
 import br.edu.ifms.evapoweka.instances.FullInstances;
 import br.edu.ifms.evapoweka.util.Config;
 import br.edu.ifms.evapoweka.util.MLPRun;
+import br.edu.ifms.evapoweka.util.SQLiteJDBC;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -10,15 +11,22 @@ import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import org.apache.commons.io.FilenameUtils;
 import weka.classifiers.evaluation.Evaluation;
 import weka.core.Instances;
 
-/**
+/*
  * Esta classe simula qual a melhor disposicao de camadas ocultas para o
  * algoritmo encontrar o melhor resultado.
  *
@@ -33,7 +41,7 @@ import weka.core.Instances;
  */
 public class HiddenLayersVariation {
 
-    private File output;
+    private int idFile;
     private File[] arffFiles;
 
     public static void main(String[] args) {
@@ -41,9 +49,17 @@ public class HiddenLayersVariation {
         // new HiddenLayersVariation();
     }
 
+    public HiddenLayersVariation(int idFile, File[] arffFiles) {
+
+        this.idFile = idFile;
+        this.arffFiles = arffFiles;
+
+        run();
+
+    }
+
     public HiddenLayersVariation(File output, File[] arffFiles) {
 
-        this.output = output;
         this.arffFiles = arffFiles;
 
         run();
@@ -54,11 +70,15 @@ public class HiddenLayersVariation {
 
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd-HHmm");
 
-        test3HiddenLayersVariation();
+        try {
+            test3HiddenLayersVariation();
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
 
     }
 
-    public void test3HiddenLayersVariation() {
+    public void test3HiddenLayersVariation() throws SQLException {
 
         // String[] options = {"-L", "0.3", "-M", "0.2", "-N", "250", "-V", "0",
         //    "-S", "1", "-E", "1", "-H", "", "-R"};
@@ -71,9 +91,37 @@ public class HiddenLayersVariation {
         // List<String> lines = new ArrayList<>();
         //Path file = Paths.get(this.output.getAbsolutePath());
         int l1, l2, l3;
+        int l1Start, l2Start, l3Start;
         int min = 5;
         int max = 20;
         MLPRun mlp;
+
+        String selectSQL = "Select\n"
+                + "    MAX(l1) l1,\n"
+                + "    MAX(l2) l2,\n"
+                + "    MAX(l3) l3\n"
+                + "From outputData\n"
+                + "Where idFile = ?";
+
+        Connection con = SQLiteJDBC.getConnection();
+        PreparedStatement preparedStatement = con.prepareStatement(selectSQL);
+        preparedStatement.setInt(1, this.idFile);
+        ResultSet rs = preparedStatement.executeQuery();
+        if (rs.next()) {
+            l1Start = Math.max(rs.getInt("l1"), min);
+            l2Start = Math.max(rs.getInt("l2"), min);
+            l3Start = Math.max(rs.getInt("l3") + 1, min);
+        } else {
+            l1Start = min;
+            l2Start = min;
+            l3Start = min;
+        }
+        rs.close();
+        preparedStatement.close();
+
+        if ((l1Start >= max) && (l2Start >= max) && (l3Start >= max)) {
+            return;
+        }
 
         List<Instances> instancesList = new ArrayList<>();
 
@@ -90,17 +138,26 @@ public class HiddenLayersVariation {
         List<String> line;
         String tmp;
 
-        PrintWriter writer;
-        try {
-            writer = new PrintWriter(this.output.getAbsoluteFile(), "UTF-8");
-        } catch (IOException ex) {
-            ex.printStackTrace();
-            return;
-        }
+        String sql = "INSERT INTO outputData (\n"
+                + "    idFile, l1, l2, l3,\n"
+                + "    verao, outono, inverno, primavera\n"
+                + ")\n"
+                + "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+        preparedStatement = con.prepareStatement(sql);
 
-        for (l1 = min; l1 <= max; l1++) {
-            for (l2 = min; l2 <= max; l2++) {
-                for (l3 = min; l3 <= max; l3++) {
+        preparedStatement.setInt(1, this.idFile);
+
+        for (l1 = l1Start; l1 <= max; l1++) {
+
+            preparedStatement.setInt(2, l1);
+
+            for (l2 = l2Start; l2 <= max; l2++) {
+
+                preparedStatement.setInt(3, l2);
+
+                for (l3 = l3Start; l3 <= max; l3++) {
+
+                    preparedStatement.setInt(4, l3);
 
                     line = new ArrayList<>();
                     line.add(Integer.toString(l1));
@@ -112,17 +169,21 @@ public class HiddenLayersVariation {
 
                     mlp = new MLPRun();
                     mlp.mlp.setHiddenLayers(l1 + "," + l2 + "," + l3);
+                    // mlp.printConfig();
 
+                    int col = 5;
                     for (Instances instancesItem : instancesList) {
 
                         try {
 
                             Evaluation eval = mlp.evaluate(instancesItem, instancesItem);
 
-                            tmp = String.valueOf(eval.correlationCoefficient() * 100);
-                            System.out.println(tmp);
+                            Double correlationCoefficient = eval.correlationCoefficient() * 100;
+                            //tmp = String.valueOf(correlationCoefficient);
+                            // System.out.println(tmp);
 
-                            line.add(tmp);
+                            line.add(String.valueOf(correlationCoefficient));
+                            preparedStatement.setDouble(col++, correlationCoefficient);
 
                         } catch (Exception ex) {
                             ex.printStackTrace();
@@ -130,27 +191,21 @@ public class HiddenLayersVariation {
 
                     }
 
-                    tmp = String.join(",", line);
-                    writer.println(tmp);
-                    writer.flush();
+                    // tmp = String.join(",", line);
+                    // System.out.println(tmp);
+                    preparedStatement.executeUpdate();
 
-                    // lines.add(tmp);
-                    // break;
+                    // writer.println(tmp);
+                    // writer.flush();
                 }
 
-                // break;
+                con.commit();
+                l3Start = min;
             }
 
-            // break;
+            l2Start = min;
         }
 
-        writer.close();
-
-        // try {
-        //     Files.write(file, lines, Charset.forName("UTF-8"));
-        // } catch (IOException ex) {
-        //     ex.printStackTrace();
-        // }
     }
 
 }

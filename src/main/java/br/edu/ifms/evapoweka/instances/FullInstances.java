@@ -5,12 +5,16 @@ import java.io.File;
 import weka.core.Instances;
 import weka.core.converters.ConverterUtils;
 
-/**
+/*
  *
  * @author Alisson G. Chiquitto <chiquitto@gmail.com>
  */
 public class FullInstances {
 
+    public static Instances factory() throws Exception {
+        return null;
+    }
+    
     public static Instances factory(File file) throws Exception {
         ConverterUtils.DataSource source;
         
