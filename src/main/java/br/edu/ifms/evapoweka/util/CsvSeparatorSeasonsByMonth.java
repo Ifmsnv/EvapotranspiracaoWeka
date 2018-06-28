@@ -58,8 +58,6 @@ public class CsvSeparatorSeasonsByMonth {
 
         } catch (IOException ex) {
             ex.printStackTrace();
-        } catch (ParseException ex) {
-            ex.printStackTrace();
         } finally {
             try {
                 this.fileReader.close();
@@ -221,7 +219,7 @@ public class CsvSeparatorSeasonsByMonth {
     }
 
     private void parseLines()
-            throws IOException, ParseException {
+            throws IOException {
 
         Iterable<CSVRecord> records = obtainCsvIterable();
 
@@ -231,8 +229,20 @@ public class CsvSeparatorSeasonsByMonth {
             String ano = record.get("ANO");
             String dataString = String.format("01/%s/%s", mes, ano);
 
-            Date data = this.dateFormat.parse(dataString);
-            int estacao = calculateEstacao(data);
+            Date date;
+            
+            try {
+                date = this.dateFormat.parse(dataString);
+            } catch (ParseException e) {
+                System.out.print(">>>>>");
+                System.out.print(record.toString());
+                System.out.println("<<<<<");
+                
+                e.printStackTrace();
+                continue;
+            }
+            
+            int estacao = calculateEstacao(date);
 
             switch (estacao) {
                 case 1:
