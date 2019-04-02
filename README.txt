@@ -27,6 +27,8 @@ Processo 3
     . Separar o arquivo em estações (CsvSeparatorSeasons)
     . Gerar arquivos ARFF (Csv2Arff)
     . Calcular a melhor distribuição de neorônios (HiddenLayersVariation)
+    . Salvar o modelo (Weka) com melhor resultado encontrado em cada estacao/cidade (SaveWekaModels)
+    . Gerar CSV com dados estimados para cada model (PredictedDataCsv)
 
 Para gerar um JAR, seguir os passos de
 https://stackoverflow.com/questions/574594/how-can-i-create-an-executable-jar-with-dependencies-using-maven

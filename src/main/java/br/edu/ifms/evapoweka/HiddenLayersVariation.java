@@ -68,7 +68,7 @@ public class HiddenLayersVariation {
 
     private void run() {
 
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd-HHmm");
+        // SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd-HHmm");
 
         try {
             test3HiddenLayersVariation();
@@ -103,6 +103,7 @@ public class HiddenLayersVariation {
                 + "From outputData\n"
                 + "Where idFile = ?";
 
+        // Continuar do ponto que parou
         Connection con = SQLiteJDBC.getConnection();
         PreparedStatement preparedStatement = con.prepareStatement(selectSQL);
         preparedStatement.setInt(1, this.idFile);

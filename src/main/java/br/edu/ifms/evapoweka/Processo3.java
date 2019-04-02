@@ -8,6 +8,9 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import org.apache.commons.io.FilenameUtils;
 
 public class Processo3 {
 
@@ -74,7 +77,23 @@ public class Processo3 {
 
         // Calcular a melhor distribuição de neorônios (HiddenLayersVariation)
         HiddenLayersVariation d = new HiddenLayersVariation(idFile, arffFiles);
-
+        
+        try {
+            // Apos calcular a distribuicao dos neuronios, encontrar a distribuicao
+            // que ofereceu o melhor resultado e salvar o modelo utilizado em um arquivo
+            // para ser utilizado no Weka
+            
+            String[] estacoes = {"verao", "outono", "inverno", "primavera"};
+            for (int iEstacao = 0; iEstacao < estacoes.length; iEstacao++) {
+                String dir = arffFiles[iEstacao].getParent();
+                String modelFile = String.format("%s/%s.model", dir, estacoes[iEstacao]);
+                
+                SaveWekaModel s = new SaveWekaModel(idFile, estacoes[iEstacao],
+                        new File(modelFile), arffFiles[iEstacao]);
+            }
+        } catch (Exception ex) {
+            System.out.println(ex);
+        }
     }
 
     public static void main(String[] args) {
