@@ -33,6 +33,7 @@ public class Processo3 {
             while (rs.next()) {
                 int idFile = rs.getInt("idFile");
                 String name = rs.getString("name");
+                // if (!name.equals("bandeirantes")) continue;
                 String fileName = name + ".csv";
                 
                 String filePath = String.format("%s/%s", Config.PATH_DATA, fileName);
