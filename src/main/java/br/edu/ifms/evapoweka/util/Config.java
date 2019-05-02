@@ -7,6 +7,6 @@ package br.edu.ifms.evapoweka.util;
 public class Config {
     
     public static final String PATH_DATA = "/home/alisson/work/EvapotranspiracaoWeka"
-            + "/data/dados-climaticos-2";
+            + "/data/dados-climaticos-3";
     
 }

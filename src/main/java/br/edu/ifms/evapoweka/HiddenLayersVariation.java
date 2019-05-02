@@ -69,7 +69,6 @@ public class HiddenLayersVariation {
     private void run() {
 
         // SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd-HHmm");
-
         try {
             test3HiddenLayersVariation();
         } catch (SQLException ex) {
@@ -90,16 +89,15 @@ public class HiddenLayersVariation {
         // }
         // List<String> lines = new ArrayList<>();
         //Path file = Paths.get(this.output.getAbsolutePath());
-        int l1, l2, l3;
-        int l1Start, l2Start, l3Start;
+        int l1, l2;
+        int l1Start, l2Start;
         int min = 5;
         int max = 20;
         MLPRun mlp;
 
         String selectSQL = "Select\n"
                 + "    MAX(l1) l1,\n"
-                + "    MAX(l2) l2,\n"
-                + "    MAX(l3) l3\n"
+                + "    MAX(l2) l2\n"
                 + "From outputData\n"
                 + "Where idFile = ?";
 
@@ -110,17 +108,15 @@ public class HiddenLayersVariation {
         ResultSet rs = preparedStatement.executeQuery();
         if (rs.next()) {
             l1Start = Math.max(rs.getInt("l1"), min);
-            l2Start = Math.max(rs.getInt("l2"), min);
-            l3Start = Math.max(rs.getInt("l3") + 1, min);
+            l2Start = Math.max(rs.getInt("l2") + 1, min);
         } else {
             l1Start = min;
             l2Start = min;
-            l3Start = min;
         }
         rs.close();
         preparedStatement.close();
 
-        if ((l1Start >= max) && (l2Start >= max) && (l3Start >= max)) {
+        if ((l1Start >= max) && (l2Start >= max)) {
             return;
         }
 
@@ -140,10 +136,10 @@ public class HiddenLayersVariation {
         String tmp;
 
         String sql = "INSERT INTO outputData (\n"
-                + "    idFile, l1, l2, l3,\n"
+                + "    idFile, l1, l2,\n"
                 + "    verao, outono, inverno, primavera\n"
                 + ")\n"
-                + "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+                + "VALUES (?, ?, ?, ?, ?, ?, ?)";
         preparedStatement = con.prepareStatement(sql);
 
         preparedStatement.setInt(1, this.idFile);
@@ -156,52 +152,44 @@ public class HiddenLayersVariation {
 
                 preparedStatement.setInt(3, l2);
 
-                for (l3 = l3Start; l3 <= max; l3++) {
+                line = new ArrayList<>();
+                line.add(Integer.toString(l1));
+                line.add(Integer.toString(l2));
+                line.add(Integer.toString(l1 + l2));
 
-                    preparedStatement.setInt(4, l3);
+                System.out.println(line);
 
-                    line = new ArrayList<>();
-                    line.add(Integer.toString(l1));
-                    line.add(Integer.toString(l2));
-                    line.add(Integer.toString(l3));
-                    line.add(Integer.toString(l1 + l2 + l3));
+                mlp = new MLPRun();
+                mlp.mlp.setHiddenLayers(l1 + "," + l2);
+                // mlp.printConfig();
 
-                    System.out.println(line);
+                int col = 4;
+                for (Instances instancesItem : instancesList) {
 
-                    mlp = new MLPRun();
-                    mlp.mlp.setHiddenLayers(l1 + "," + l2 + "," + l3);
-                    // mlp.printConfig();
+                    try {
 
-                    int col = 5;
-                    for (Instances instancesItem : instancesList) {
+                        Evaluation eval = mlp.evaluate(instancesItem, instancesItem);
 
-                        try {
+                        Double correlationCoefficient = eval.correlationCoefficient() * 100;
+                        //tmp = String.valueOf(correlationCoefficient);
+                        // System.out.println(tmp);
 
-                            Evaluation eval = mlp.evaluate(instancesItem, instancesItem);
+                        line.add(String.valueOf(correlationCoefficient));
+                        preparedStatement.setDouble(col++, correlationCoefficient);
 
-                            Double correlationCoefficient = eval.correlationCoefficient() * 100;
-                            //tmp = String.valueOf(correlationCoefficient);
-                            // System.out.println(tmp);
-
-                            line.add(String.valueOf(correlationCoefficient));
-                            preparedStatement.setDouble(col++, correlationCoefficient);
-
-                        } catch (Exception ex) {
-                            ex.printStackTrace();
-                        }
-
+                    } catch (Exception ex) {
+                        ex.printStackTrace();
                     }
 
-                    // tmp = String.join(",", line);
-                    // System.out.println(tmp);
-                    preparedStatement.executeUpdate();
-
-                    // writer.println(tmp);
-                    // writer.flush();
                 }
 
+                // tmp = String.join(",", line);
+                // System.out.println(tmp);
+                preparedStatement.executeUpdate();
+
+                // writer.println(tmp);
+                // writer.flush();
                 con.commit();
-                l3Start = min;
             }
 
             l2Start = min;

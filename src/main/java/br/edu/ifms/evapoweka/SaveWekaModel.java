@@ -13,6 +13,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Arrays;
 import weka.classifiers.evaluation.Evaluation;
 import weka.classifiers.evaluation.output.prediction.AbstractOutput;
 import weka.classifiers.evaluation.output.prediction.CSV;
@@ -27,7 +28,7 @@ import weka.core.SerializationHelper;
 public class SaveWekaModel {
 
     SaveWekaModel(int idFile, String estacao, File modelFile, File arffFile) throws SQLException, FileNotFoundException, Exception {
-        String selectSQL = "Select l1, l2, l3 From outputData "
+        String selectSQL = "Select l1, l2 From outputData "
                 + "Where (idFile = ?) Order By %s Desc Limit 1";
         selectSQL = String.format(selectSQL, estacao);
 
@@ -43,10 +44,9 @@ public class SaveWekaModel {
 
         int l1 = rs.getInt("l1");
         int l2 = rs.getInt("l2");
-        int l3 = rs.getInt("l3");
 
         MLPRun mlp = new MLPRun();
-        mlp.mlp.setHiddenLayers(l1 + "," + l2 + "," + l3);
+        mlp.mlp.setHiddenLayers(l1 + "," + l2);
 
         Instances instances = FullInstances.factory(arffFile);
 
@@ -55,7 +55,12 @@ public class SaveWekaModel {
         Evaluation eval = mlp.evaluate(instances, instances, classificationOutput);
         // Double correlationCoefficient = eval.correlationCoefficient() * 100;
         
-        String summaryString = eval.toSummaryString("\nResults\n======\n", true);
+        String title = String.format("Resultados\n"
+                + "======\n"
+                + "Neoronios nas camadas: [%d, %d]\n"
+                + "======\n", l1, l2);
+        
+        String summaryString = eval.toSummaryString(title, true);
 
         // BufferedWriter bwr = new BufferedWriter(new FileWriter(modelFile + ".predictions.csv"));
         // bwr.write(sbf.toString());

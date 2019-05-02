@@ -49,7 +49,7 @@ public class MLPRun {
     }
 
     public Evaluation evaluate(Instances train, Instances test) {
-        return this.evaluate(train, test);
+        return this.evaluate(train, test, null);
     }
 
     public void printConfig() {

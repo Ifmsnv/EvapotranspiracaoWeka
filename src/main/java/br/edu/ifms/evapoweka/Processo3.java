@@ -72,6 +72,7 @@ public class Processo3 {
             // Gerar arquivos ARFF (Csv2Arff)
             Csv2Arff c = new Csv2Arff(b.getNewFile());
             arffFiles[i] = c.getNewFile();
+            System.out.println(arffFiles[i].getAbsoluteFile());
 
             i++;
         }
@@ -93,7 +94,7 @@ public class Processo3 {
                         new File(modelFile), arffFiles[iEstacao]);
             }
         } catch (Exception ex) {
-            System.out.println(ex);
+            ex.printStackTrace();
         }
     }
 

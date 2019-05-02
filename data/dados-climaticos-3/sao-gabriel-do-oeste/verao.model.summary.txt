@@ -1,0 +1,11 @@
+Resultados
+======
+Neoronios nas camadas: [5, 19]
+======
+
+Correlation coefficient                  0.5857
+Mean absolute error                      0.1878
+Root mean squared error                  0.276 
+Relative absolute error                 72.8044 %
+Root relative squared error             83.2654 %
+Total Number of Instances               84     
